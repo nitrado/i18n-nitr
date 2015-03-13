@@ -25,9 +25,9 @@ describe('i18nGetCatalog', function () {
         catalogs.should.have.property('de');
         //catalogs.de.should.have.property('welcome', 'Willkommen');
     });
-     it('should return false when invoked with unsupported locale as parameter', function () {
+    it('should return false when invoked with unsupported locale as parameter', function () {
         i18n.getCatalog({ locale: 'oO' }).should.equal(false);
-     });
+    });
 });
 
 describe('i18nTranslate', function () {
@@ -40,6 +40,7 @@ describe('i18nTranslate', function () {
         i18n.readFile('custom', 'custom/');
         should.equal(__('test'), 'here we are');
         should.equal(__('custom/test'), 'here we are');
+        var catalogs = i18n.getCatalog({ prefix: true });
     });
 
     it('should return de translations as expected', function () {

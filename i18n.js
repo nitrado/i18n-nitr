@@ -227,12 +227,14 @@ i18n.getCatalog = function i18ngGetCatalog(opts) {
         catalog[i] = {};
         
         for(var j in locales[i]) {
-            catalog[i][(prefix?j:j.replace(j, ''))] = translate(locales[i][j].singular, opts);
+            catalog[i][(prefix?locales[i][j].prefix + locales[i][j].key:locales[i][j].key)] = translate(locales[i][j].singular, opts);
         }
     }
     
     if(locale !== null && !Object.keys(catalog).length)
         return false;
+    
+    debug(catalog);
     
     return catalog;
 };
