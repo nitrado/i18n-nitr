@@ -57,7 +57,7 @@ i18n.configure = function i18nConfigure(opt) {
 i18n.readFile = function i18nReadFile(file, prefix) {
     var prefix = (typeof prefix === 'string') ? prefix : '';
     
-    var filepath = path.normalize(__dirname + pathsep + 'locales' + pathsep);
+    var filepath = path.normalize(directory + pathsep);
     debug("availableLocales: " + availableLocales.join(', '));
     availableLocales.forEach(function(l) {
         if(locales[l] === undefined)
