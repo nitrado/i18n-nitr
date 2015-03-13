@@ -39,6 +39,8 @@ describe('i18nTranslate', function () {
     it('load custom language file with prefix', function () {
         i18n.readFile('custom', 'custom/');
         should.equal(__('test'), 'here we are');
+        should.equal(__('TEST'), 'here we are');
+        should.equal(__('tEsT'), 'here we are');
         should.equal(__('custom/test'), 'here we are');
         var catalogs = i18n.getCatalog({ prefix: true });
     });
