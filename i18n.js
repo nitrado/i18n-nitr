@@ -61,7 +61,7 @@ i18n.readFile = function i18nReadFile(file, prefix) {
     debug("availableLocales: " + availableLocales.join(', '));
     availableLocales.forEach(function(l) {
         if(locales[l] === undefined)
-            locales[l] = {};
+            locales[l] = [];
         
         var locale = locales[l];
 
@@ -71,7 +71,7 @@ i18n.readFile = function i18nReadFile(file, prefix) {
             try {
                 var obj = jsyaml.load(localeFile, {schema: yamlSchema});
                 for(var i in obj) {
-                    locale[prefix + i] = { singular: obj[i], prefix: prefix, file: file };
+                    locale.push({ key: i, singular: obj[i], prefix: prefix, file: file });
                 }
             } catch (parserError) {
                 
@@ -164,6 +164,16 @@ function applyAPItoObject(request, response) {
   });
 }
 
+function find(locale, key, prefix) {
+    for(var i in locale) {
+        var translation = locale[i];
+        if(translation.key.toLowerCase() === key.toLowerCase() || (prefix && (translation.prefix + translation.key.toLowerCase()) === key.toLowerCase()))
+            return translation;
+    }
+    
+    return undefined;
+}
+
 function _translate(key, opts) {
     var locale, translation;
     
@@ -179,16 +189,20 @@ function _translate(key, opts) {
         locale = locales[opts.locale];
     }
     
-    if(locale[key] === undefined && opts.locale != defaultLocale) {
+    var item = find(locale, key);
+    if(item === undefined) {
+        item = find(locale, key, true);
+    }
+    if(item === undefined && opts.locale != defaultLocale) {
         debug('key not found in ' + opts.locale + ' locale and is not default locale ' + defaultLocale);
         translation = _translate(key, { locale: defaultLocale });
     }
     
-    if(locale[key] === undefined) {
+    if(item === undefined) {
         debug('key not found in ' + opts.locale);
-        translation = { singular: key, prefix: "", file: "" };
+        translation = { key: key, singular: key, prefix: "", file: "" };
     } else {
-        translation = locale[key];
+        translation = item;
     }
     
     if(translation === undefined)
