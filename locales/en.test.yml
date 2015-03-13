@@ -1,0 +1,3 @@
+welcome: "Welcome"
+fromto: "{{from}} to {{to}}"
+onlyhere: "Only here"
