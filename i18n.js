@@ -71,7 +71,7 @@ i18n.readFile = function i18nReadFile(file, prefix) {
             try {
                 var obj = jsyaml.load(localeFile, {schema: yamlSchema});
                 for(var i in obj) {
-                    locale[i] = { singular: obj[i], prefix: prefix, file: file };
+                    locale[prefix + i] = { singular: obj[i], prefix: prefix, file: file };
                 }
             } catch (parserError) {
                 
@@ -213,7 +213,7 @@ i18n.getCatalog = function i18ngGetCatalog(opts) {
         catalog[i] = {};
         
         for(var j in locales[i]) {
-            catalog[i][(prefix?locales[i][j].prefix + j:j)] = translate(locales[i][j].singular, opts);
+            catalog[i][(prefix?j:j.replace(j, ''))] = translate(locales[i][j].singular, opts);
         }
     }
     
