@@ -167,7 +167,7 @@ function applyAPItoObject(request, response) {
 function find(locale, key, prefix) {
     for(var i in locale) {
         var translation = locale[i];
-        if(translation.key.toLowerCase() === key.toLowerCase() || (prefix && (translation.prefix + translation.key.toLowerCase()) === key.toLowerCase()))
+        if(translation.key.toLowerCase() === key.toLowerCase() || (prefix && (translation.prefix + translation.key).toLowerCase() === key.toLowerCase()))
             return translation;
     }
     
