@@ -189,18 +189,27 @@ function _translate(key, opts) {
         locale = locales[opts.locale];
     }
     
-    var item = find(locale, key);
+    // find key in current locale with prefix
+    var item = find(locale, key, true);
     if(item === undefined) {
-        item = find(locale, key, true);
+        // find key in current locale without prefix
+        item = find(locale, key);
     }
+    
+    //console.log(item);
+    
+    // when key not found and locale is not defaultLocale try it with defaultLocale
     if(item === undefined && opts.locale != defaultLocale) {
         debug('key not found in ' + opts.locale + ' locale and is not default locale ' + defaultLocale);
         translation = _translate(key, { locale: defaultLocale });
+        
     }
     
-    if(item === undefined) {
+    if(item === undefined && translation == undefined) {
         debug('key not found in ' + opts.locale);
         translation = { key: key, singular: key, prefix: "", file: "" };
+    } else if(translation !== undefined) {
+        translation = translation;
     } else {
         translation = item;
     }

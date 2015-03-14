@@ -42,6 +42,7 @@ describe('i18nTranslate', function () {
         should.equal(__('TEST'), 'here we are');
         should.equal(__('tEsT'), 'here we are');
         should.equal(__('custom/test'), 'here we are');
+        
         var catalogs = i18n.getCatalog({ prefix: true });
     });
 
@@ -49,5 +50,9 @@ describe('i18nTranslate', function () {
         i18n.setLocale('de');
         should.equal(__('welcome'), 'Willkommen');
         should.equal(__('fromto', {from: "Berlin", to: "Munich"}), 'Berlin nach Munich');
+    });
+    
+    it('should return de translations as expected with args', function () {
+        should.equal(__('withargs', { test: 'jim', number: 123 }), 'jim 123');
     });
 });
