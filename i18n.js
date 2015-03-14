@@ -202,7 +202,6 @@ function _translate(key, opts) {
     if(item === undefined && opts.locale != defaultLocale) {
         debug('key not found in ' + opts.locale + ' locale and is not default locale ' + defaultLocale);
         translation = _translate(key, { locale: defaultLocale });
-        
     }
     
     if(item === undefined && translation == undefined) {
