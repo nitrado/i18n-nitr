@@ -165,6 +165,11 @@ function applyAPItoObject(request, response) {
 }
 
 function find(locale, key, prefix) {
+    if(key === undefined) {
+        error("key is undefined");
+        return key;
+    }
+    
     for(var i in locale) {
         var translation = locale[i];
         if(translation.key.toLowerCase() === key.toLowerCase() || (prefix && (translation.prefix + translation.key).toLowerCase() === key.toLowerCase()))
