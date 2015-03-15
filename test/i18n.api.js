@@ -55,4 +55,8 @@ describe('i18nTranslate', function () {
     it('should return de translations as expected with args', function () {
         should.equal(__('withargs', { test: 'jim', number: 123 }), 'jim 123');
     });
+    
+    it('undefined key should return undefined', function () {
+        should.equal(__(undefined), undefined);
+    });
 });
