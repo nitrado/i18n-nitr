@@ -1,2 +1,3 @@
 test: "here we are"
 withargs: "{{test}} {{number}}"
+"http://www.test.org/#?1234äöü": "http://www.test.org/#?1234äöü"

@@ -59,4 +59,13 @@ describe('i18nTranslate', function () {
     it('undefined key should return undefined', function () {
         should.equal(__(undefined), undefined);
     });
+    
+    it('escaping of symbols', function () {
+        // disable default html escape
+        i18n.escapeHtml(function(str) { 
+            return str;
+        });
+        should.equal(__("http://www.test.org/#?1234äöü"), "http://www.test.org/#?1234äöü");
+        should.equal(__("{{symbols}}", { symbols: "http://www.test.org/#?1234äöü" }), "http://www.test.org/#?1234äöü");
+    });
 });

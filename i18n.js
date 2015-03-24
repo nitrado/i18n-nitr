@@ -92,6 +92,10 @@ i18n.getLocale = function i18nGetLocale() {
   return preferredLocale;
 };
 
+i18n.escapeHtml = function i18nEscapeHtml(func) {
+  Mustache.escape = func;
+};
+
 /*
     __('Hello'); // Hallo
     __('Hello %s', 'Marcus'); // Hallo Marcus
