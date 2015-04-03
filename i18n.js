@@ -10,6 +10,7 @@ var vsprintf = require('sprintf').vsprintf,
     Mustache = require('mustache'),
     util = require('util'),
     locales = {},
+    prefixed_locales = {},
     api = ['__', '__n', 'getLocale', 'setLocale', 'getCatalog'],
     pathsep = path.sep || '/', // ---> means win support will be available in node 0.8.x and above
     defaultLocale, preferredLocale, availableLocales, localeFiles, directory, extension, indent, yamlSchema;
@@ -61,17 +62,24 @@ i18n.readFile = function i18nReadFile(file, prefix) {
     debug("availableLocales: " + availableLocales.join(', '));
     availableLocales.forEach(function(l) {
         if(locales[l] === undefined)
-            locales[l] = [];
+            locales[l] = {};
         
-        var locale = locales[l];
+        if(prefixed_locales[l] === undefined) {
+            prefixed_locales[l] = {};
+        }
 
         debug('try to load language file ' + filepath + l + '.' + file + extension);
         try {
+            var locale = locales[l];
+            var prefixed_locale = prefixed_locales[l];
+            
             var localeFile = fs.readFileSync(filepath + l + '.' + file + extension).toString();
             try {
                 var obj = jsyaml.load(localeFile, {schema: yamlSchema});
                 for(var i in obj) {
-                    locale.push({ key: i, singular: obj[i], prefix: prefix, file: file });
+                    var o = { singular: obj[i], file: file };
+                    locale[i.toLowerCase()] = o;
+                    prefixed_locale[(prefix + i).toLowerCase()] = o;
                 }
             } catch (parserError) {
                 
@@ -168,7 +176,7 @@ function applyAPItoObject(request, response) {
   });
 }
 
-function find(locale, key, prefix) {
+/*function find(locale, key, prefix) {
     if(key === undefined) {
         error("key is undefined");
         return key;
@@ -181,10 +189,10 @@ function find(locale, key, prefix) {
     }
     
     return undefined;
-}
+}*/
 
 function _translate(key, opts) {
-    var locale, translation;
+    var locale, prefixed_locale, translation;
     
     if(opts === undefined)
         opts = {};
@@ -198,11 +206,18 @@ function _translate(key, opts) {
         locale = locales[opts.locale];
     }
     
+    if(prefixed_locales[opts.locale] === undefined) {
+        prefixed_locale = prefixed_locales[defaultLocale];
+    } else {
+        prefixed_locale = prefixed_locales[opts.locale];
+    }
+    
     // find key in current locale with prefix
-    var item = find(locale, key, true);
+    var item = prefixed_locale[(key === undefined?key:key.toLowerCase())];
+    //var item = find(locale, key, true);
     if(item === undefined) {
         // find key in current locale without prefix
-        item = find(locale, key);
+        item = locale[(key === undefined?key:key.toLowerCase())];
     }
     
     //console.log(item);
@@ -214,7 +229,7 @@ function _translate(key, opts) {
     }
     
     if(item === undefined && translation == undefined) {
-        debug('key not found in ' + opts.locale);
+        debug('key not found in ' + opts.locale + ' ' + key);
         translation = { key: key, singular: key, prefix: "", file: "" };
     } else if(translation !== undefined) {
         translation = translation;
@@ -237,7 +252,7 @@ i18n.getCatalog = function i18ngGetCatalog(opts) {
     var prefix = (opts !== undefined && typeof opts.prefix === 'boolean') ? opts.prefix : false;
     
     var catalog = {};
-    for(var i in locales) {
+    /*for(var i in locales) {
         if(locale !== null && locale != i)
             continue;
         
@@ -246,6 +261,14 @@ i18n.getCatalog = function i18ngGetCatalog(opts) {
         for(var j in locales[i]) {
             catalog[i][(prefix?locales[i][j].prefix + locales[i][j].key:locales[i][j].key)] = translate(locales[i][j].singular, opts);
         }
+    }*/
+    
+    if(locale == null) {
+        catalog = (prefix?prefixed_locales:locales);
+    } else {
+        catalog = (prefix?prefixed_locales[locale]:locales[locale]);
+        if(catalog === undefined)
+            return false;
     }
     
     if(locale !== null && !Object.keys(catalog).length)
