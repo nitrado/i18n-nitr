@@ -252,14 +252,14 @@ i18n.getCatalog = function i18ngGetCatalog(opts) {
     var prefix = (opts !== undefined && typeof opts.prefix === 'boolean') ? opts.prefix : false;
     
     var catalog = {};
-    /*for(var i in locales) {
+    /*for(var i in (prefix?prefixed_locales:locales)) {
         if(locale !== null && locale != i)
             continue;
         
         catalog[i] = {};
         
-        for(var j in locales[i]) {
-            catalog[i][(prefix?locales[i][j].prefix + locales[i][j].key:locales[i][j].key)] = translate(locales[i][j].singular, opts);
+        for(var j in (prefix?prefixed_locales:locales)[i]) {
+            catalog[i][j] = translate(locales[i][j].singular, opts);
         }
     }*/
     
