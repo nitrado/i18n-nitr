@@ -252,24 +252,24 @@ i18n.getCatalog = function i18ngGetCatalog(opts) {
     var prefix = (opts !== undefined && typeof opts.prefix === 'boolean') ? opts.prefix : false;
     
     var catalog = {};
-    /*for(var i in (prefix?prefixed_locales:locales)) {
+    for(var i in (prefix?prefixed_locales:locales)) {
         if(locale !== null && locale != i)
             continue;
         
         catalog[i] = {};
         
         for(var j in (prefix?prefixed_locales:locales)[i]) {
-            catalog[i][j] = translate(locales[i][j].singular, opts);
+            catalog[i][j] = translate((prefix?prefixed_locales:locales)[i][j].singular, opts);
         }
-    }*/
+    }
     
-    if(locale == null) {
+    /*if(locale == null) {
         catalog = (prefix?prefixed_locales:locales);
     } else {
         catalog = (prefix?prefixed_locales[locale]:locales[locale]);
         if(catalog === undefined)
             return false;
-    }
+    }*/
     
     if(locale !== null && !Object.keys(catalog).length)
         return false;
